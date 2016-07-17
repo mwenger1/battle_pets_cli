@@ -41,9 +41,14 @@ class TrainerClient
   end
 
   def delete_account
-    RestClient.delete trainer_endpoint
-    say "Your account has been deleted!! Restart game to create a new account."
-    exit
+    delete_account =
+      ask "Are you sure you want to delete your account and all of your BattlePets? (y/n)"
+
+    if AFFIRMATIVE_WORDS.include? delete_account.downcase
+      RestClient.delete trainer_endpoint
+      say "All of your account info has been deleted. Restart game to create a new account."
+      exit
+    end
   end
 
   def create_battle_pet

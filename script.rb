@@ -1,19 +1,11 @@
 require "pry"
+require "json"
 require "highline"
+require "highline/import"
 require "rest-client"
+require "./lib/helper_methods"
+require "./lib/trainer_client"
 
-class Trainer
-  def self.find(trainer)
-    RestClient.get "http://localhost:7000/trainers/#{trainer}"
-  end
-end
+trainer_client = login_trainer
 
-cli = HighLine.new
-trainer =
-  cli.ask "Welcome to BattlePets! Which trainer would you like to play as?"
-
-if trainer = Trainer.find(trainer)
-  cli.say "Welcome #{trainer}"
-else
-  cli.say "We don't have an account for #{trainer}. Would you like to create one?"
-end
+prompt_user_with_menu_options(trainer_client)

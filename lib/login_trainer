@@ -1,0 +1,4 @@
+trainer =
+  $cli.ask "Welcome to BattlePets! Which trainer would you like to play as?"
+
+TrainerClient.new(trainer).find_or_create

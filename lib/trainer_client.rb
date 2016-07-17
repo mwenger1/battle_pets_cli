@@ -117,7 +117,7 @@ class TrainerClient
   end
 
   def trainer_endpoint
-    [ENDPOINT_URL, name].join("/")
+    [ENDPOINT_URL, URI.encode(name)].join("/")
   end
 
   def create_trainer

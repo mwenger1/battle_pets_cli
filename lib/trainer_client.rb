@@ -25,7 +25,7 @@ class TrainerClient
     opponents = build_opponents_list
     opponent_names = opponents.map { |opponent| opponent["name"] }
 
-    say "Your challengers include #{opponent_names.join(", ")}."
+    say "Your opponents include #{opponent_names.join(", ")}."
   end
 
   def update_account
@@ -46,11 +46,52 @@ class TrainerClient
     exit
   end
 
+  def create_battle_pet
+    name = ask "What do you want to call your BattlePet?"
+
+    battle_pet = create_and_build_battle_pet(name)
+    say "Congrats! You have just created: #{battle_pet}"
+    say "Gain more experience by challenging an enemy to a battle"
+  rescue RestClient::UnprocessableEntity
+    say "BattlePet not created as you already have a BattlePet with that name."
+  end
+
+  def view_battle_pets
+    battle_pets = build_battle_pets_list
+
+    if battle_pets.any?
+      say "Your BattlePets include:"
+      battle_pets.each { |battle_pet| say battle_pet }
+    else
+      say "Yikes! You have no BattlePets. Create some before challenging an opponent"
+    end
+  end
+
   private
+
+  def create_and_build_battle_pet(name)
+    battle_pet = JSON.parse(
+      RestClient.post(battle_pet_endpoint, { battle_pet: { name: name } })
+    )
+
+    BattlePet.new(symbolize_hash battle_pet)
+  end
+
+  def build_battle_pets_list
+    fetch_battle_pets.map { |pet| BattlePet.new(symbolize_hash pet) }
+  end
+
+  def symbolize_hash(hash)
+    Hash[hash.map{ |k, v| [k.to_sym, v] }]
+  end
+
+  def fetch_battle_pets
+    JSON.parse(RestClient.get battle_pet_endpoint)
+  end
 
   def build_opponents_list
     fetch_all_trainers.reject do |trainer|
-      trainer["name"] == name
+      trainer["name"].downcase == name.downcase
     end
   end
 
@@ -60,6 +101,10 @@ class TrainerClient
 
   def fetch_trainer
     RestClient.get trainer_endpoint
+  end
+
+  def battle_pet_endpoint
+    [trainer_endpoint, "battle_pets"].join("/")
   end
 
   def trainer_endpoint

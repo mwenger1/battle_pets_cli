@@ -2,6 +2,8 @@ class TrainerClient
   AFFIRMATIVE_WORDS = ["y", "yes"]
   ENDPOINT_URL = "http://localhost:7000/trainers"
 
+  attr_reader :name
+
   def initialize(name)
     @name = name
   end
@@ -23,12 +25,25 @@ class TrainerClient
     opponents = build_opponents_list
     opponent_names = opponents.map { |opponent| opponent["name"] }
 
-    say "Your challengers include: #{opponent_names.join(", ")}"
+    say "Your challengers include #{opponent_names.join(", ")}."
+  end
+
+  def update_account
+    new_name =
+      ask "Your current name is #{name}. What would you like to change it to?"
+
+    RestClient.patch trainer_endpoint, trainer: { name: new_name }
+    @name = new_name
+    say "Your name was successfully updated."
+  end
+
+  def delete_account
+    RestClient.delete trainer_endpoint
+    say "Your account has been deleted!! Restart game to create a new account."
+    exit
   end
 
   private
-
-  attr_reader :name
 
   def build_opponents_list
     fetch_all_trainers.reject do |trainer|
@@ -41,7 +56,11 @@ class TrainerClient
   end
 
   def fetch_trainer
-    RestClient.get [ENDPOINT_URL, name].join("/")
+    RestClient.get trainer_endpoint
+  end
+
+  def trainer_endpoint
+    [ENDPOINT_URL, name].join("/")
   end
 
   def create_trainer

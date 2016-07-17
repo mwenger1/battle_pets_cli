@@ -1,6 +1,6 @@
 class TrainerClient
   AFFIRMATIVE_WORDS = ["y", "yes"]
-  ENDPOINT_URL = "http://localhost:7000/trainers"
+  ENDPOINT_URL = "http://localhost:7000/v1/trainers"
 
   attr_reader :name
 

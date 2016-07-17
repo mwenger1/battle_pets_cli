@@ -23,9 +23,13 @@ class TrainerClient
 
   def view_opponents
     opponents = build_opponents_list
-    opponent_names = opponents.map { |opponent| opponent["name"] }
 
-    say "Your opponents include #{opponent_names.join(", ")}."
+    if opponents.any?
+      opponent_names = opponents.map { |opponent| opponent["name"] }
+      say "Your opponents include #{opponent_names.join(", ")}."
+    else
+      say "There are no opponents! Invite some friends to play so you can challenge them."
+    end
   end
 
   def update_account

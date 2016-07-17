@@ -35,6 +35,9 @@ class TrainerClient
     RestClient.patch trainer_endpoint, trainer: { name: new_name }
     @name = new_name
     say "Your name was successfully updated."
+
+  rescue RestClient::UnprocessableEntity
+    say "Your name was not updated as that trainer name is already taken."
   end
 
   def delete_account

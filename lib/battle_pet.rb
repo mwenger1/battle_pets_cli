@@ -1,5 +1,8 @@
 class BattlePet
-  def initialize(name:, strength:, agility:, wit:, senses:, **)
+  attr_reader :id
+
+  def initialize(id:, name:, strength:, agility:, wit:, senses:, **)
+    @id = id
     @name = name
     @strength = strength
     @agility = agility

@@ -3,7 +3,7 @@
 Before setting up the game to play, you must download and follow the
 install instructions for [BattlePets
 Management](https://github.com/mwenger1/battle_pets_management) and [BattlePets
-Arena](coming soon).
+Arena](https://github.com/mwenger1/battle_pets_arena).
 
 Once those services are running locally, this CLI game is ready to be installed.
 First install the necessary gems with:
